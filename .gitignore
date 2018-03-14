@@ -1,0 +1,13 @@
+build/
+bin/
+
+# eclipse
+.cproject
+.project
+.settings/
+
+# cmake
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
