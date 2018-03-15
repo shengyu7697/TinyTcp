@@ -8,7 +8,7 @@
 
 typedef std::function<void(int session)> OnConnect;
 typedef std::function<void(int session)> OnDisconnect;
-typedef std::function<void(int socket, int session, const char *buf, int len)> OnRecv;
+typedef std::function<void(int session, const char *buf, int len)> OnRecv;
 
 class TinyTcpServer
 {

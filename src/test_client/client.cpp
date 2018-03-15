@@ -18,9 +18,9 @@ void onDisconnect(int session)
 	printf("onDisconnect\n");
 }
 
-void onRecv(int socket, int session, const char *buf, int len)
+void onRecv(int session, const char *buf, int len)
 {
-	//printf("socket=%d, session=%d, len=%d, buf=%s\n", socket, session, len, buf);
+	//printf("session=%d, len=%d, buf=%s\n", session, len, buf);
 	printf("%s\n", buf);
 }
 

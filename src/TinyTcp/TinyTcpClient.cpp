@@ -107,7 +107,7 @@ void TinyTcpClient::processConn(int socket, int session)
 
 		// notify onRecv callback
 		if (onRecv)
-			onRecv(socket, session, buf, len);
+			onRecv(session, buf, len);
 	}
 
 	// TODO

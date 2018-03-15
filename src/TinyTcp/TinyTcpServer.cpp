@@ -183,7 +183,7 @@ void TinyTcpServer::processConn(int socket, int session)
 
 		// notify onRecv callback
 		if (onRecv)
-			onRecv(socket, session, buf, len);
+			onRecv(session, buf, len);
 	}
 
 	closeConn(session);
