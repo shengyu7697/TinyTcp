@@ -6,14 +6,27 @@
 #include <unistd.h>
 #include <string.h>
 
+#include <iostream>
+
+using namespace std;
+
 TinyTcpServer::TinyTcpServer() 
 {
-
+#ifdef _WIN32
+	WSADATA wsa;
+	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0) {
+		printf("[TinyTcp] WSAStartup failed, error: %d\n", WSAGetLastError());
+	}
+#endif
 }
 
 TinyTcpServer::~TinyTcpServer() 
 {
-	// TODO stop thread
+	// TODO stop server thread
+	//closeAllConn();
+#ifdef _WIN32
+	WSACleanup();
+#endif
 }
 
 void TinyTcpServer::setOnConnectCB(OnConnect onConnect)
@@ -38,16 +51,32 @@ int TinyTcpServer::send(const char *data, int size)
 
 int TinyTcpServer::send(int session, const char *data, int size)
 {
-	// TODO send to socket? session?
-	/*int len = ::send(mSocket, data, size, 0);
-	if (len < 0) {
-		printf("[TinyTcp] Send failed, error:\n"); // , getLastError()
+	// find the socket of session and send
+	auto c = mConnMap.find(session);
+	if (c == end(mConnMap)) {
+		printf("[TinyTcp] session %d is not exist!\n", session);
+		return -1;
 	}
-	return len;*/
+
+	int len = ::send(c->second, data, size, 0);
+	if (len < 0) {
+		printf("[TinyTcp] Send failed, error:\n"); // FIXME getLastError()
+	}
+	return len;
 }
 
 int TinyTcpServer::sendAll(const char *data, int size)
 {
+	int len;
+	map<int, int>::iterator c;
+	for(c = mConnMap.begin(); c != mConnMap.end(); c++) {
+		printf("send to %d %d\n", c->first, c->second);
+		len = ::send(c->second, data, size, 0);
+		if (len < 0) {
+			printf("[TinyTcp] Send failed, error:\n"); // FIXME getLastError()
+		}
+	}
+	return len;
 }
 
 
@@ -107,13 +136,13 @@ int TinyTcpServer::run()
 	while (1)
 	{
 		newSocket = accept(mServerSocket, (struct sockaddr *)&addr, &addrlen);
+		if (newSocket == -1) {
+			printf("[TinyTcp] Accept failed, error: \n"); // FIXME getLastError()
+			break;
+		}
+
 		printf("accecpt fd%d ip=%s:%d\n", newSocket,
 				inet_ntoa(addr.sin_addr), ntohs(addr.sin_port));
-
-		if (newSocket == -1) {
-			perror("Wrong connection");
-			exit(1);
-		}
 
 		// notify onConnect callback
 		if (onConnect)
@@ -121,9 +150,12 @@ int TinyTcpServer::run()
 
 		// create a connection thread
 		mConnThreadList.push_back(std::thread(&TinyTcpServer::processConn, this, newSocket, mSession));
+		mConnMap.insert(pair<int, int>(mSession, newSocket));
 
 		mSession++;
 	}
+
+	closeSocket(mServerSocket);
 }
 
 void TinyTcpServer::processConn(int socket, int session)
@@ -136,12 +168,7 @@ void TinyTcpServer::processConn(int socket, int session)
 		int len = recv(socket, buf, sizeof(buf), 0); // TODO use read? recv?
 
 		if (len == 0) { // connection closed
-			// notify onRecv callback
-			if (onDisconnect)
-				onDisconnect(session);
-
 			printf("[TinyTcp] close client socket=%d, session=%d\n", socket, session);
-			closeSocket(socket); // close client socket
 			break;
 		} else if (len == -1) { // error
 			printf("[TinyTcp] error %d\n", __LINE__);
@@ -152,4 +179,23 @@ void TinyTcpServer::processConn(int socket, int session)
 		if (onRecv)
 			onRecv(socket, session, buf, len);
 	}
+
+	closeConn(session);
+}
+
+void TinyTcpServer::closeConn(int session)
+{
+	auto c = mConnMap.find(session);
+	if (c == end(mConnMap))
+		return;
+
+	// notify onDisconnect callback
+	if (onDisconnect)
+		onDisconnect(session);
+
+	closeSocket(c->second); // close client socket
+
+	mConnMap.erase(c);
+
+	// TODO stop conn thread
 }

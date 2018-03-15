@@ -22,7 +22,7 @@ void closeSocket(int socket)
 #ifdef _WIN32
 	closesocket(socket);
 #else
-	//shutdown(socket, SHUT_RDWR);
+	//shutdown(socket, SHUT_RDWR); // FIXME
 	close(socket);
 #endif
 	//printf("[TinyTcp] Socket closed\n");

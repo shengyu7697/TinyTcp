@@ -33,7 +33,7 @@ int TinyTcpClient::send(const char *data, int size)
 {
 	int len = ::send(mSocket, data, size, 0);
 	if (len < 0) {
-		printf("[TinyTcp] Send failed, error:\n"); // , getLastError()
+		printf("[TinyTcp] Send failed, error:\n"); // FIXME getLastError()
 	}
 	return len;
 }
@@ -57,7 +57,7 @@ int TinyTcpClient::run()
 	struct sockaddr_in addr;
 	addr.sin_family = AF_INET;
 	addr.sin_port = htons(mPort);
-	inet_pton(AF_INET, mHostname.c_str(), &(addr.sin_addr)); // TODO use inet_aton ?
+	inet_pton(AF_INET, mHostname.c_str(), &(addr.sin_addr)); // FIXME use inet_aton ?
 	//inet_aton(ip_address, &addr.sin_addr);
 
 	while (!mConnected) // retry forever
@@ -67,8 +67,8 @@ int TinyTcpClient::run()
 		if (ret == 0) {
 			mConnected = true;
 		} else if (ret == -1) { // -1 shall be returned and errno set to indicate the error.
-			perror("Connection error");
-			return -1;
+			perror("Connect error");
+			std::this_thread::sleep_for(std::chrono::milliseconds(1000)); // 1 second
 		}
 	}
 
@@ -105,4 +105,6 @@ void TinyTcpClient::processConn(int socket, int session)
 		if (onRecv)
 			onRecv(socket, session, buf, len);
 	}
+
+	// TODO
 }

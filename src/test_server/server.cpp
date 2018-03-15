@@ -34,7 +34,7 @@ int main(int argc, char* argv[])
     server.setOnConnectCB(onConnect);
     server.setOnDisconnectCB(onDisconnect);
     server.setOnRecvCB(onRecv);
-	server.start(7000, 5);
+	server.start(7000);
 
 	char msg[256];
 	while(gRunning)
@@ -43,12 +43,9 @@ int main(int argc, char* argv[])
 		if (strcmp(msg, "q") == 0) {
 			gRunning = false;
 		} else {
-			server.send(msg, strlen(msg));
-			/*
-			server.send(i, "123"); // send to connection i
-			server.send("123");  // send to default (0) connection
-			server.sendAll("123"); // send to all connection
-			*/
+			//server.send(msg, strlen(msg));
+			//server.send(1, msg, strlen(msg)); // send to connection i
+			server.sendAll(msg, strlen(msg)); // send to all connection
 		}
 	}
 

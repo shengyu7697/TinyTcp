@@ -4,6 +4,7 @@
 #include <thread>
 #include <functional>
 #include <vector>
+#include <map>
 
 typedef std::function<void(int session)> OnConnect;
 typedef std::function<void(int session)> OnDisconnect;
@@ -21,7 +22,8 @@ public:
 	int send(const char *data, int size);
 	int send(int session, const char *data, int size);
 	int sendAll(const char *data, int size);
-	int start(int port, int maxConn);
+	int start(int port, int maxConn = 5);
+	void closeConn(int session);
 
 private:
 	int bind(int port);
@@ -33,6 +35,7 @@ private:
 	int mPort;
 	std::thread mThread;
 	std::vector<std::thread> mConnThreadList; // server only
+	std::map<int, int> mConnMap;
 	int mSession = 0;
 
 	OnConnect onConnect = nullptr;

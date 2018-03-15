@@ -20,7 +20,8 @@ void onDisconnect(int session)
 
 void onRecv(int socket, int session, const char *buf, int len)
 {
-	printf("socket=%d, session=%d, len=%d, buf=%s\n", socket, session, len, buf);
+	//printf("socket=%d, session=%d, len=%d, buf=%s\n", socket, session, len, buf);
+	printf("%s\n", buf);
 }
 
 int main(int argc, char* argv[])
