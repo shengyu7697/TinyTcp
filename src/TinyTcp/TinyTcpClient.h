@@ -21,7 +21,7 @@ public:
 	int start(const std::string &hostname, int port);
 
 private:
-	int run();
+	void run();
 	void processConn(int socket, int session);
 
 	int mSocket;

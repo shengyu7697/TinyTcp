@@ -28,7 +28,7 @@ public:
 private:
 	int bind(int port);
 	int listen(int backlog);
-	int run();
+	void run();
 	void processConn(int socket, int session);
 
 	int mServerSocket;

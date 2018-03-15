@@ -1,9 +1,13 @@
 #include "TinyTcpServer.h"
 #include "SocketUtil.h"
+#ifdef _WIN32
+#include <Ws2tcpip.h>
+#else
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <unistd.h>
+#endif
 #include <string.h>
 
 #include <iostream>
@@ -46,7 +50,7 @@ void TinyTcpServer::setOnRecvCB(OnRecv onRecv)
 
 int TinyTcpServer::send(const char *data, int size)
 {
-	this->send(0, data, size);
+	return this->send(0, data, size);
 }
 
 int TinyTcpServer::send(int session, const char *data, int size)
@@ -79,50 +83,52 @@ int TinyTcpServer::sendAll(const char *data, int size)
 	return len;
 }
 
-
 int TinyTcpServer::start(int port, int maxConn)
 {
-	int sock_fd = createSocket();
-
-	int on = 1;
-	struct sockaddr_in my_name;
-	int status;
+	int s = createSocket();
+	if (s < 0)
+		return -1;
 
 	// set socket reuse
-	// for "Address already in use" error message
-	if (setsockopt(sock_fd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(int)) == -1) {
+	int optval = 1;
+#ifdef _WIN32
+	int optlen = sizeof(optval);
+#else
+	socklen_t optlen = sizeof(optval);
+#endif
+	int status = setsockopt(s, SOL_SOCKET, SO_REUSEADDR, (const char *)&optval, optlen);
+	if (status == -1) {
 		perror("Setsockopt error");
 		return -1;
 	}
 
 	// bind socket
+	struct sockaddr_in my_name;
 	my_name.sin_family = AF_INET;
 	my_name.sin_addr.s_addr = INADDR_ANY;
 	my_name.sin_port = htons(port);
 
-	status = ::bind(sock_fd, (struct sockaddr *)&my_name, sizeof(my_name));
+	status = ::bind(s, (struct sockaddr *)&my_name, sizeof(my_name));
 	if (status == -1) {
 		perror("Binding error");
 		return -1;
 	}
 	printf("server ip=%s:%d\n", inet_ntoa(my_name.sin_addr), port);
 
-
-	//int status;
-	status = ::listen(sock_fd, maxConn);
+	status = ::listen(s, maxConn);
 	if (status == -1) {
 		perror("Listening error");
 		return -1;
 	}
 
-	mServerSocket = sock_fd;
+	mServerSocket = s;
 
 	mThread = std::thread(&TinyTcpServer::run, this);
 
 	return 1;
 }
 
-int TinyTcpServer::run()
+void TinyTcpServer::run()
 {
 	int newSocket;
 

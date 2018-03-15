@@ -1,8 +1,12 @@
 #include "TinyTcpClient.h"
 #include "SocketUtil.h"
+#ifdef _WIN32
+#include <Ws2tcpip.h>
+#else
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#endif
 #include <string.h>
 
 TinyTcpClient::TinyTcpClient() 
@@ -40,8 +44,8 @@ int TinyTcpClient::send(const char *data, int size)
 
 int TinyTcpClient::start(const std::string &hostname, int port)
 {
-	int s;
-	if ((s = createSocket()) < 0)
+	int s = createSocket();
+	if (s < 0)
 		return -1;
 
 	mSocket = s;
@@ -51,7 +55,7 @@ int TinyTcpClient::start(const std::string &hostname, int port)
 	mThread = std::thread(&TinyTcpClient::run, this);
 }
 
-int TinyTcpClient::run()
+void TinyTcpClient::run()
 {
 	// server address
 	struct sockaddr_in addr;
