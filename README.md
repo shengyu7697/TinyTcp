@@ -6,6 +6,8 @@ This is a C++ socket library designed to fast development of socket related func
 * Support TCP communication.
 * C++11 thread.
 * C++11 functional.
+* vector (STL).
+* map (STL).
 
 ## ToDo
 * Implement session
