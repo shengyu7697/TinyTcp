@@ -11,11 +11,20 @@
 
 TinyTcpClient::TinyTcpClient() 
 {
+#ifdef _WIN32
+	WSADATA wsa;
+	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0) {
+		printf("[TinyTcp] WSAStartup failed, error: %d\n", WSAGetLastError());
+	}
+#endif
 }
 
 TinyTcpClient::~TinyTcpClient() 
 {
 	// TODO stop thread
+#ifdef _WIN32
+	WSACleanup();
+#endif
 }
 
 void TinyTcpClient::setOnConnectCB(OnConnect onConnect)
