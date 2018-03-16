@@ -3,6 +3,7 @@
 
 int createSocket();
 void closeSocket(int socket);
+int acceptSocket(int socket);
 int getLastError();
 
 #define DEBUG 1
