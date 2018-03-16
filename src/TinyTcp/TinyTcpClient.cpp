@@ -10,6 +10,7 @@
 #include <string.h>
 
 TinyTcpClient::TinyTcpClient() :
+	mVerbose(0),
 	mSocket(-1),
 	mRunning(true),
 	mSession(0),
@@ -31,6 +32,11 @@ TinyTcpClient::~TinyTcpClient()
 #ifdef _WIN32
 	WSACleanup();
 #endif
+}
+
+void TinyTcpClient::setVerbose(int level)
+{
+	mVerbose = level;
 }
 
 void TinyTcpClient::setOnConnectCB(OnConnect onConnect)

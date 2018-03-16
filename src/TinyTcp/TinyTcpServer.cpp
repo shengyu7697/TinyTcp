@@ -12,6 +12,7 @@
 using namespace std;
 
 TinyTcpServer::TinyTcpServer() :
+	mVerbose(0),
 	mServerSocket(-1),
 	mRunning(true),
 	mSession(0),
@@ -19,7 +20,6 @@ TinyTcpServer::TinyTcpServer() :
 	onDisconnect(nullptr),
 	onRecv(nullptr)
 {
-	DEBUG_PRINT("\n");
 #ifdef _WIN32
 	WSADATA wsa;
 	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0) {
@@ -34,6 +34,11 @@ TinyTcpServer::~TinyTcpServer()
 #ifdef _WIN32
 	WSACleanup();
 #endif
+}
+
+void TinyTcpServer::setVerbose(int level)
+{
+	mVerbose = level;
 }
 
 void TinyTcpServer::setOnConnectCB(OnConnect onConnect)
@@ -235,7 +240,7 @@ void TinyTcpServer::stop()
 {
 	// close all client connection
 	closeAllConn();
-	
+
 	if (mThread.joinable()) {
 		closeSocket(mServerSocket); // close server self socket
 		mThread.join();

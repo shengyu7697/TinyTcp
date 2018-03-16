@@ -14,6 +14,7 @@ public:
 	TinyTcpClient();
 	~TinyTcpClient();
 
+	void setVerbose(int level);
 	void setOnConnectCB(OnConnect onConnect);
 	void setOnDisconnectCB(OnDisconnect onDisconnect);
 	void setOnRecvCB(OnRecv onRecv);
@@ -26,6 +27,7 @@ private:
 	void run();
 	void processConn(int socket, int session);
 
+	int mVerbose;
 	int mSocket;
 	std::string mHostname;
 	int mPort;
