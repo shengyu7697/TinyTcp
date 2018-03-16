@@ -19,6 +19,7 @@ TinyTcpServer::TinyTcpServer() :
 	onDisconnect(nullptr),
 	onRecv(nullptr)
 {
+	DEBUG_PRINT("\n");
 #ifdef _WIN32
 	WSADATA wsa;
 	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0) {
@@ -87,6 +88,7 @@ int TinyTcpServer::sendAll(const char *data, int size)
 
 int TinyTcpServer::start(int port, int maxConn)
 {
+	DEBUG_PRINT("\n");
 	int s = createSocket();
 	if (s < 0)
 		return -1;
@@ -181,7 +183,7 @@ void TinyTcpServer::processConn(int socket, int session)
 			printf("[TinyTcp] close client socket=%d, session=%d\n", socket, session);
 			break;
 		} else if (len == -1) { // error
-			printf("[TinyTcp] error %d\n", __LINE__);
+			printf("[TinyTcp] recv error %d\n", __LINE__);
 			break;
 		}
 
