@@ -4,6 +4,7 @@
 #else
 #include <sys/socket.h>
 #include <unistd.h>
+#include <errno.h>
 #endif
 
 int createSocket()
