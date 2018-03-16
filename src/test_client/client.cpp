@@ -31,11 +31,15 @@ int main(int argc, char* argv[])
         exit(1);
     }*/
 
+	const std::string hostname = "127.0.0.1";
+	int port = 7000;
+	printf("start client, connect to %s:%d\n", hostname.c_str(), port);
+
 	TinyTcpClient client;
 	client.setOnConnectCB(onConnect);
 	client.setOnDisconnectCB(onDisconnect);
 	client.setOnRecvCB(onRecv);
-	client.start("127.0.0.1", 7000);
+	client.start(hostname, 7000);
 
 	char msg[256];
 	while(gRunning)
@@ -47,6 +51,8 @@ int main(int argc, char* argv[])
 			client.send(msg, strlen(msg));
 		}
 	}
+
+	printf("end of process.\n");
 
     return 0;
 }

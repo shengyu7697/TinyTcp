@@ -30,11 +30,14 @@ int main(int argc, char* argv[])
         exit(1);
     }*/
 
+	int port = 7000;
+	printf("start server, bind on %d\n", port);
+
 	TinyTcpServer server;
     server.setOnConnectCB(onConnect);
     server.setOnDisconnectCB(onDisconnect);
     server.setOnRecvCB(onRecv);
-	server.start(7000);
+	server.start(port);
 
 	char msg[256];
 	while(gRunning)
@@ -49,7 +52,7 @@ int main(int argc, char* argv[])
 		}
 	}
 
-	cout << "end of process\n";
+	printf("end of process.\n");
 
     return 0;
 }
