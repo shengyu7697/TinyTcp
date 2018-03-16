@@ -9,7 +9,13 @@
 #endif
 #include <string.h>
 
-TinyTcpClient::TinyTcpClient() 
+TinyTcpClient::TinyTcpClient() :
+	mSocket(-1),
+	mConnected(false),
+	mSession(0),
+	onConnect(nullptr),
+	onDisconnect(nullptr),
+	onRecv(nullptr)
 {
 #ifdef _WIN32
 	WSADATA wsa;

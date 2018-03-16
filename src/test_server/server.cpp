@@ -46,9 +46,9 @@ int main(int argc, char* argv[])
 		if (strcmp(msg, "q") == 0) {
 			gRunning = false;
 		} else {
-			//server.send(msg, strlen(msg));
-			//server.send(1, msg, strlen(msg)); // send to connection i
-			server.sendAll(msg, strlen(msg)); // send to all connection
+			//server.send(msg, (int)strlen(msg));
+			//server.send(1, msg, (int)strlen(msg)); // send to connection i
+			server.sendAll(msg, (int)strlen(msg)); // send to all connection
 		}
 	}
 

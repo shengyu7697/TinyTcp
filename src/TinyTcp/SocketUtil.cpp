@@ -30,3 +30,12 @@ void closeSocket(int socket)
 #endif
 	//printf("[TinyTcp] Socket closed\n");
 }
+
+int getLastError()
+{
+#ifdef _WIN32
+	return WSAGetLastError();
+#else
+	return errno;
+#endif
+}

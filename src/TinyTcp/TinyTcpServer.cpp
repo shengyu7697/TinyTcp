@@ -11,7 +11,12 @@
 
 using namespace std;
 
-TinyTcpServer::TinyTcpServer() 
+TinyTcpServer::TinyTcpServer() :
+	mServerSocket(-1),
+	mSession(0),
+	onConnect(nullptr),
+	onDisconnect(nullptr),
+	onRecv(nullptr)
 {
 #ifdef _WIN32
 	WSADATA wsa;

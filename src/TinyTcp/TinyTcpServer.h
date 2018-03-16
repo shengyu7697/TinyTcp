@@ -36,11 +36,11 @@ private:
 	std::thread mThread;
 	std::vector<std::thread> mConnThreadList; // server only
 	std::map<int, int> mConnMap;
-	int mSession = 0;
+	int mSession;
 
-	OnConnect onConnect = nullptr;
-	OnDisconnect onDisconnect = nullptr;
-	OnRecv onRecv = nullptr;
+	OnConnect onConnect;
+	OnDisconnect onDisconnect;
+	OnRecv onRecv;
 };
 
 #endif // TINYTCPSERVER_H

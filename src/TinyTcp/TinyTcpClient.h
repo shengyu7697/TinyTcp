@@ -29,11 +29,11 @@ private:
 	int mPort;
 	std::thread mThread;
 	bool mConnected; // client only
-	int mSession = 0;
+	int mSession;
 
-	OnConnect onConnect = nullptr;
-	OnDisconnect onDisconnect = nullptr;
-	OnRecv onRecv = nullptr;
+	OnConnect onConnect;
+	OnDisconnect onDisconnect;
+	OnRecv onRecv;
 };
 
 #endif // TINYTCPCLIENT_H

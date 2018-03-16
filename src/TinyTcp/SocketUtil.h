@@ -3,5 +3,6 @@
 
 int createSocket();
 void closeSocket(int socket);
+int getLastError();
 
 #endif // SOCKETUTIL_H

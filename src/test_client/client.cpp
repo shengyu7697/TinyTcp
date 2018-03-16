@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
 		if (strcmp(msg, "q") == 0) {
 			gRunning = false;
 		} else {
-			client.send(msg, strlen(msg));
+			client.send(msg, (int)strlen(msg));
 		}
 	}
 
