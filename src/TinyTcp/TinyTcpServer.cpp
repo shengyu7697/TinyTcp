@@ -185,7 +185,7 @@ void TinyTcpServer::processConn(int socket, int session)
 		int len = recv(socket, buf, sizeof(buf), 0); // TODO use read? recv?
 
 		if (len == 0) { // connection closed
-			printf("[TinyTcp] close client socket=%d, session=%d\n", socket, session);
+			printf("[TinyTcp] close client %d\n", session);
 			break;
 		} else if (len == -1) { // error
 			printf("[TinyTcp] recv error %d\n", __LINE__);

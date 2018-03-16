@@ -88,7 +88,7 @@ void TinyTcpClient::run()
 	inet_pton(AF_INET, mHostname.c_str(), &(addr.sin_addr)); // FIXME use inet_aton ?
 	//inet_aton(ip_address, &addr.sin_addr);
 
-	while (!connected) // retry forever
+	while (!connected && mSocket != -1) // retry forever
 	{
 		// connect to the server
 		int ret = ::connect(mSocket, (struct sockaddr *)&addr, sizeof(addr));
@@ -101,7 +101,7 @@ void TinyTcpClient::run()
 	}
 
 	// notify onConnect callback
-	if (onConnect)
+	if (onConnect && connected)
 		onConnect(mSession);
 
 	processConn(mSocket, mSession);
@@ -120,7 +120,7 @@ void TinyTcpClient::processConn(int socket, int session)
 			printf("[TinyTcp] recv server socket closed\n");
 			break;
 		} else if (len == -1) { // error
-			printf("[TinyTcp] error %d\n", __LINE__);
+			printf("[TinyTcp] error recv %d\n", __LINE__);
 			break;
 		}
 
@@ -147,6 +147,7 @@ void TinyTcpClient::stop()
 {
 	if (mThread.joinable()) {
 		closeSocket(mSocket); // close client self socket
+		mSocket = -1;
 		mThread.join();
 	}
 }
