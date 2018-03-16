@@ -150,7 +150,7 @@ void TinyTcpServer::run()
 
 	while (mRunning)
 	{
-		newSocket = accept(mServerSocket, (struct sockaddr *)&addr, &addrlen);
+		newSocket = (int)accept(mServerSocket, (struct sockaddr *)&addr, &addrlen);
 		if (newSocket == -1) {
 			printf("[TinyTcp] Accept failed, error: \n"); // FIXME getLastError()
 			break;
