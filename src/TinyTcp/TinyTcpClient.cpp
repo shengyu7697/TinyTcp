@@ -68,6 +68,7 @@ int TinyTcpClient::start(const std::string &hostname, int port)
 	mPort = port;
 
 	mThread = std::thread(&TinyTcpClient::run, this);
+	return 1;
 }
 
 void TinyTcpClient::run()
