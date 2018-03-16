@@ -11,7 +11,7 @@
 
 TinyTcpClient::TinyTcpClient() :
 	mSocket(-1),
-	mConnected(false),
+	mRunning(true),
 	mSession(0),
 	onConnect(nullptr),
 	onDisconnect(nullptr),
@@ -27,7 +27,7 @@ TinyTcpClient::TinyTcpClient() :
 
 TinyTcpClient::~TinyTcpClient() 
 {
-	// TODO stop thread
+	stop();
 #ifdef _WIN32
 	WSACleanup();
 #endif
@@ -72,6 +72,8 @@ int TinyTcpClient::start(const std::string &hostname, int port)
 
 void TinyTcpClient::run()
 {
+	bool connected = false;
+
 	// server address
 	struct sockaddr_in addr;
 	addr.sin_family = AF_INET;
@@ -79,12 +81,12 @@ void TinyTcpClient::run()
 	inet_pton(AF_INET, mHostname.c_str(), &(addr.sin_addr)); // FIXME use inet_aton ?
 	//inet_aton(ip_address, &addr.sin_addr);
 
-	while (!mConnected) // retry forever
+	while (!connected) // retry forever
 	{
 		// connect to the server
 		int ret = ::connect(mSocket, (struct sockaddr *)&addr, sizeof(addr));
 		if (ret == 0) {
-			mConnected = true;
+			connected = true;
 		} else if (ret == -1) { // -1 shall be returned and errno set to indicate the error.
 			perror("Connect error");
 			std::this_thread::sleep_for(std::chrono::milliseconds(1000)); // 1 second
@@ -102,18 +104,13 @@ void TinyTcpClient::processConn(int socket, int session)
 {
 	char buf[1024];
 
-	while (1)
+	while (mRunning)
 	{
 		memset(buf, 0, sizeof(buf));
 		int len = recv(socket, buf, sizeof(buf), 0);
 
 		if (len == 0) { // connection closed
-			// notify onRecv callback
-			if (onDisconnect)
-				onDisconnect(session);
-
 			printf("[TinyTcp] recv server socket closed\n");
-			closeSocket(socket); // close client socket
 			break;
 		} else if (len == -1) { // error
 			printf("[TinyTcp] error %d\n", __LINE__);
@@ -125,5 +122,24 @@ void TinyTcpClient::processConn(int socket, int session)
 			onRecv(session, buf, len);
 	}
 
-	// TODO
+	// notify onDisconnect callback
+	if (onDisconnect)
+		onDisconnect(session);
+
+	closeSocket(socket); // close client socket
+
+	mRunning = false;
+}
+
+bool TinyTcpClient::isRunning()
+{
+	return mRunning;
+}
+
+void TinyTcpClient::stop()
+{
+	if (mThread.joinable()) {
+		closeSocket(mSocket); // close client self socket
+		mThread.join();
+	}
 }

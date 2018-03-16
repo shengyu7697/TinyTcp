@@ -24,6 +24,9 @@ public:
 	int sendAll(const char *data, int size);
 	int start(int port, int maxConn = 5);
 	void closeConn(int session);
+	void closeAllConn();
+	bool isRunning();
+	void stop();
 
 private:
 	int bind(int port);
@@ -34,6 +37,7 @@ private:
 	int mServerSocket;
 	int mPort;
 	std::thread mThread;
+	bool mRunning;
 	std::vector<std::thread> mConnThreadList; // server only
 	std::map<int, int> mConnMap;
 	int mSession;

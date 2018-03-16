@@ -19,6 +19,8 @@ public:
 	void setOnRecvCB(OnRecv onRecv);
 	int send(const char *data, int size);
 	int start(const std::string &hostname, int port);
+	bool isRunning();
+	void stop();
 
 private:
 	void run();
@@ -28,7 +30,7 @@ private:
 	std::string mHostname;
 	int mPort;
 	std::thread mThread;
-	bool mConnected; // client only
+	bool mRunning;
 	int mSession;
 
 	OnConnect onConnect;

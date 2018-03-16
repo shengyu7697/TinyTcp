@@ -6,8 +6,6 @@
 
 using namespace std;
 
-bool gRunning = true;
-
 void onConnect(int session)
 {
 	printf("onConnect\n");
@@ -21,7 +19,7 @@ void onDisconnect(int session)
 void onRecv(int session, const char *buf, int len)
 {
 	//printf("session=%d, len=%d, buf=%s\n", session, len, buf);
-	printf("%s\n", buf);
+	printf("Server: %s\n", buf);
 }
 
 int main(int argc, char* argv[])
@@ -42,11 +40,11 @@ int main(int argc, char* argv[])
 	client.start(hostname, 7000);
 
 	char msg[256];
-	while(gRunning)
+	while (client.isRunning())
 	{
 		cin >> msg;
 		if (strcmp(msg, "q") == 0) {
-			gRunning = false;
+			client.stop();
 		} else {
 			client.send(msg, (int)strlen(msg));
 		}

@@ -13,6 +13,7 @@ using namespace std;
 
 TinyTcpServer::TinyTcpServer() :
 	mServerSocket(-1),
+	mRunning(true),
 	mSession(0),
 	onConnect(nullptr),
 	onDisconnect(nullptr),
@@ -28,8 +29,7 @@ TinyTcpServer::TinyTcpServer() :
 
 TinyTcpServer::~TinyTcpServer() 
 {
-	// TODO stop server thread
-	//closeAllConn();
+	stop();
 #ifdef _WIN32
 	WSACleanup();
 #endif
@@ -76,7 +76,7 @@ int TinyTcpServer::sendAll(const char *data, int size)
 	int len;
 	map<int, int>::iterator c;
 	for(c = mConnMap.begin(); c != mConnMap.end(); c++) {
-		printf("send to %d %d\n", c->first, c->second);
+		printf("send to client %d\n", c->first);
 		len = ::send(c->second, data, size, 0);
 		if (len < 0) {
 			printf("[TinyTcp] Send failed, error:\n"); // FIXME getLastError()
@@ -141,7 +141,7 @@ void TinyTcpServer::run()
 	socklen_t addrlen = sizeof(addr);
 #endif
 
-	while (1)
+	while (mRunning)
 	{
 		newSocket = accept(mServerSocket, (struct sockaddr *)&addr, &addrlen);
 		if (newSocket == -1) {
@@ -163,7 +163,9 @@ void TinyTcpServer::run()
 		mSession++;
 	}
 
-	closeSocket(mServerSocket);
+	//closeSocket(mServerSocket);
+
+	mRunning = false;
 }
 
 void TinyTcpServer::processConn(int socket, int session)
@@ -203,7 +205,37 @@ void TinyTcpServer::closeConn(int session)
 
 	closeSocket(c->second); // close client socket
 
-	mConnMap.erase(c);
+	mConnMap.erase(c); // FIXME need lock
+}
 
-	// TODO stop conn thread
+void TinyTcpServer::closeAllConn()
+{
+	if (mConnMap.size() == 0)
+		return;
+
+	for (auto &c : mConnMap) {
+		// notify onDisconnect callback
+		if (onDisconnect)
+			onDisconnect(c.first);
+
+		closeSocket(c.second); // close client socket
+	}
+
+	mConnMap.clear(); // FIXME need lock
+}
+
+bool TinyTcpServer::isRunning()
+{
+	return mRunning;
+}
+
+void TinyTcpServer::stop()
+{
+	// close all client connection
+	closeAllConn();
+	
+	if (mThread.joinable()) {
+		closeSocket(mServerSocket); // close server self socket
+		mThread.join();
+	}
 }
