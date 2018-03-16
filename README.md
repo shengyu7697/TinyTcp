@@ -2,17 +2,19 @@ TinyTcp
 =======
 This is a C++ socket library designed to fast development of socket related functionality.
 
+## Features
 * Multi-threaded Client/Server socket class.
 * Support TCP communication.
 * C++11 thread.
 * C++11 functional.
 * vector (STL).
 * map (STL).
+* Cross platform (Linux, OSX and Windows).
 
 ## ToDo
-* Implement session
+* Implement session (client not yet)
 * Close thread safety
-* Cross platform
+* Add test
 
 ## License
 TinyTcp is published under the MIT license.  
