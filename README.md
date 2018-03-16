@@ -15,6 +15,8 @@ This is a C++ socket library designed to fast development of socket related func
 * Implement session (client not yet)
 * Close thread safety
 * Add test
+* Client side 是否要一直 connect retry ?
+* Log level
 
 ## License
 TinyTcp is published under the MIT license.  
