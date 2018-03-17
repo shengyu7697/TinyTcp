@@ -64,13 +64,13 @@ int TinyTcpServer::send(const char *data, int size)
 int TinyTcpServer::send(int session, const char *data, int size)
 {
 	// find the socket of session and send
-	auto c = mConnMap.find(session);
-	if (c == end(mConnMap)) {
+	auto c = mConnections.find(session);
+	if (c == end(mConnections)) {
 		printf("[TinyTcp] session %d is not exist!\n", session);
 		return -1;
 	}
 
-	int len = ::send(c->second, data, size, 0);
+	int len = ::send(c->second->socket, data, size, 0);
 	if (len < 0) {
 		printf("[TinyTcp] Send failed, error:\n"); // FIXME getLastError()
 	}
@@ -80,10 +80,9 @@ int TinyTcpServer::send(int session, const char *data, int size)
 int TinyTcpServer::sendAll(const char *data, int size)
 {
 	int len;
-	map<int, int>::iterator c;
-	for(c = mConnMap.begin(); c != mConnMap.end(); c++) {
+	for(auto c = mConnections.begin(); c != mConnections.end(); c++) {
 		printf("send to client %d\n", c->first);
-		len = ::send(c->second, data, size, 0);
+		len = ::send(c->second->socket, data, size, 0);
 		if (len < 0) {
 			printf("[TinyTcp] Send failed, error:\n"); // FIXME getLastError()
 		}
@@ -93,7 +92,6 @@ int TinyTcpServer::sendAll(const char *data, int size)
 
 int TinyTcpServer::start(int port, int maxConn)
 {
-	DEBUG_PRINT("\n");
 	int s = createSocket();
 	if (s < 0)
 		return -1;
@@ -164,8 +162,11 @@ void TinyTcpServer::run()
 			onConnect(mSession);
 
 		// create a connection thread
-		mConnThreadList.push_back(std::thread(&TinyTcpServer::processConn, this, newSocket, mSession));
-		mConnMap.insert(pair<int, int>(mSession, newSocket));
+		Connection *conn = new Connection();
+		conn->thread = thread(&TinyTcpServer::processConn, this, newSocket, mSession);
+		conn->thread.detach();
+		conn->socket = newSocket;
+		mConnections.insert(pair<int, Connection *>(mSession, conn));
 
 		mSession++;
 	}
@@ -202,33 +203,33 @@ void TinyTcpServer::processConn(int socket, int session)
 
 void TinyTcpServer::closeConn(int session)
 {
-	auto c = mConnMap.find(session);
-	if (c == end(mConnMap))
+	auto c = mConnections.find(session);
+	if (c == end(mConnections))
 		return;
 
 	// notify onDisconnect callback
 	if (onDisconnect)
 		onDisconnect(session);
 
-	closeSocket(c->second); // close client socket
+	closeSocket(c->second->socket); // close client socket
 
-	mConnMap.erase(c); // FIXME need lock
+	mConnections.erase(c); // FIXME need lock
 }
 
 void TinyTcpServer::closeAllConn()
 {
-	if (mConnMap.size() == 0)
+	if (mConnections.size() == 0)
 		return;
 
-	for (auto &c : mConnMap) {
+	for (auto &c : mConnections) {
 		// notify onDisconnect callback
 		if (onDisconnect)
 			onDisconnect(c.first);
 
-		closeSocket(c.second); // close client socket
+		closeSocket(c.second->socket); // close client socket
 	}
 
-	mConnMap.clear(); // FIXME need lock
+	mConnections.clear(); // FIXME need lock
 }
 
 bool TinyTcpServer::isRunning()

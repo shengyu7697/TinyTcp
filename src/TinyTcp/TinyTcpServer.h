@@ -10,6 +10,12 @@ typedef std::function<void(int session)> OnConnect;
 typedef std::function<void(int session)> OnDisconnect;
 typedef std::function<void(int session, const char *buf, int len)> OnRecv;
 
+class Connection {
+public:
+	std::thread thread;
+	int socket;
+};
+
 class TinyTcpServer
 {
 public:
@@ -40,8 +46,7 @@ private:
 	int mPort;
 	std::thread mThread;
 	bool mRunning;
-	std::vector<std::thread> mConnThreadList; // server only
-	std::map<int, int> mConnMap;
+	std::map<int, Connection *> mConnections;
 	int mSession;
 
 	OnConnect onConnect;
