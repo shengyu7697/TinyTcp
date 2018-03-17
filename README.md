@@ -1,6 +1,6 @@
 TinyTcp
 =======
-This is a C++ socket library designed to fast development of socket related functionality.
+This is a C++ socket wrapper designed to fast development of network related functionality.  
 
 ## Features
 * Multi-threaded Client/Server socket class.
@@ -10,10 +10,9 @@ This is a C++ socket library designed to fast development of socket related func
 * vector (STL).
 * map (STL).
 * Cross platform (Linux, OSX and Windows).
+* Implement session (server side)
 
 ## ToDo
-* Implement session (client not yet)
-* Close thread safety
 * Add test
 * Client side 是否要一直 connect retry ?
 * Log level
