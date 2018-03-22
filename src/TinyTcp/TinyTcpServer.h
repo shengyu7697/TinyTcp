@@ -23,9 +23,9 @@ public:
 	~TinyTcpServer();
 
 	void setVerbose(int level);
-	void setOnConnectCB(OnConnect onConnect);
-	void setOnDisconnectCB(OnDisconnect onDisconnect);
-	void setOnRecvCB(OnRecv onRecv);
+	void setOnConnect(OnConnect onConnect);
+	void setOnDisconnect(OnDisconnect onDisconnect);
+	void setOnRecv(OnRecv onRecv);
 	int send(const char *data, int size);
 	int send(int session, const char *data, int size);
 	int sendAll(const char *data, int size);

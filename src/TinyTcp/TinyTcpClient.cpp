@@ -39,17 +39,17 @@ void TinyTcpClient::setVerbose(int level)
 	mVerbose = level;
 }
 
-void TinyTcpClient::setOnConnectCB(OnConnect onConnect)
+void TinyTcpClient::setOnConnect(OnConnect onConnect)
 {
 	this->onConnect = onConnect;
 }
 
-void TinyTcpClient::setOnDisconnectCB(OnDisconnect onDisconnect)
+void TinyTcpClient::setOnDisconnect(OnDisconnect onDisconnect)
 {
 	this->onDisconnect = onDisconnect;
 }
 
-void TinyTcpClient::setOnRecvCB(OnRecv onRecv)
+void TinyTcpClient::setOnRecv(OnRecv onRecv)
 {
 	this->onRecv = onRecv;
 }

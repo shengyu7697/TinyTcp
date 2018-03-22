@@ -41,17 +41,17 @@ void TinyTcpServer::setVerbose(int level)
 	mVerbose = level;
 }
 
-void TinyTcpServer::setOnConnectCB(OnConnect onConnect)
+void TinyTcpServer::setOnConnect(OnConnect onConnect)
 {
 	this->onConnect = onConnect;
 }
 
-void TinyTcpServer::setOnDisconnectCB(OnDisconnect onDisconnect)
+void TinyTcpServer::setOnDisconnect(OnDisconnect onDisconnect)
 {
 	this->onDisconnect = onDisconnect;
 }
 
-void TinyTcpServer::setOnRecvCB(OnRecv onRecv)
+void TinyTcpServer::setOnRecv(OnRecv onRecv)
 {
 	this->onRecv = onRecv;
 }

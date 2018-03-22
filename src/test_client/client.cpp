@@ -34,9 +34,9 @@ int main(int argc, char* argv[])
 	printf("start client, connect to %s:%d\n", hostname.c_str(), port);
 
 	TinyTcpClient client;
-	client.setOnConnectCB(onConnect);
-	client.setOnDisconnectCB(onDisconnect);
-	client.setOnRecvCB(onRecv);
+	client.setOnConnect(onConnect);
+	client.setOnDisconnect(onDisconnect);
+	client.setOnRecv(onRecv);
 	client.start(hostname, 7000);
 
 	char msg[256];

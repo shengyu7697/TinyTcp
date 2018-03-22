@@ -32,9 +32,9 @@ int main(int argc, char* argv[])
 	printf("start server, bind on %d\n", port);
 
 	TinyTcpServer server;
-    server.setOnConnectCB(onConnect);
-    server.setOnDisconnectCB(onDisconnect);
-    server.setOnRecvCB(onRecv);
+    server.setOnConnect(onConnect);
+    server.setOnDisconnect(onDisconnect);
+    server.setOnRecv(onRecv);
 	server.start(port);
 
 	char msg[256];
