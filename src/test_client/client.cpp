@@ -24,13 +24,17 @@ void onRecv(int session, const char *buf, int len)
 
 int main(int argc, char* argv[])
 {
-    /*if (argc < 3) {
-        fprintf(stderr, "Usage: %s ip_address port_number\n", argv[0]);
-        exit(1);
-    }*/
-
-	const std::string hostname = "127.0.0.1";
+	string hostname = "127.0.0.1";
 	int port = 7000;
+
+	if (argc > 3) {
+		fprintf(stderr, "Usage: %s ip_address port_number\n", argv[0]);
+		exit(1);
+	} else if (argc == 3) {
+		hostname = argv[1];
+		port = atoi(argv[2]);
+	}
+
 	printf("start client, connect to %s:%d\n", hostname.c_str(), port);
 
 	TinyTcpClient client;
