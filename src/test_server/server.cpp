@@ -23,12 +23,15 @@ void onRecv(int session, const char *buf, int len)
 
 int main(int argc, char* argv[])
 {
-    /*if (argc < 2) {
-        fprintf(stderr, "Usage: %s port_number\n", argv[0]);
-        exit(1);
-    }*/
-
 	int port = 7000;
+
+	if (argc > 2) {
+		fprintf(stderr, "Usage: %s port_number\n", argv[0]);
+		exit(1);
+	} else if (argc == 2) {
+		port = atoi(argv[1]);
+	}
+
 	printf("start server, bind on %d\n", port);
 
 	TinyTcpServer server;
