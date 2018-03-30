@@ -232,11 +232,6 @@ void TinyTcpServer::closeAllConn()
 	mConnections.clear(); // FIXME need lock
 }
 
-bool TinyTcpServer::isRunning()
-{
-	return mRunning;
-}
-
 void TinyTcpServer::stop()
 {
 	// close all client connection

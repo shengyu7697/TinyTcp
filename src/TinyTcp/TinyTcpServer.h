@@ -32,7 +32,7 @@ public:
 	int start(int port, int maxConn = 5);
 	void closeConn(int session);
 	void closeAllConn();
-	bool isRunning();
+	inline bool isRunning() { return mRunning; }
 	void stop();
 
 private:

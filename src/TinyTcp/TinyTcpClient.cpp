@@ -138,11 +138,6 @@ void TinyTcpClient::processConn(int socket, int session)
 	mRunning = false;
 }
 
-bool TinyTcpClient::isRunning()
-{
-	return mRunning;
-}
-
 void TinyTcpClient::stop()
 {
 	if (mThread.joinable()) {

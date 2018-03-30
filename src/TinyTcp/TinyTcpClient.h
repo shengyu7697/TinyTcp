@@ -20,7 +20,7 @@ public:
 	void setOnRecv(OnRecv onRecv);
 	int send(const char *data, int size);
 	int start(const std::string &hostname, int port);
-	bool isRunning();
+	inline bool isRunning() { return mRunning; }
 	void stop();
 
 private:
