@@ -47,9 +47,11 @@ int main(int argc, char* argv[])
 		if (strcmp(msg, "q") == 0) {
 			server.stop();
 		} else {
-			//server.send(msg, (int)strlen(msg)); // send to connection 0 // FIXME send to cur connection
-			//server.send(1, msg, (int)strlen(msg)); // send to connection i
-			server.sendAll(msg, (int)strlen(msg)); // send to all connection
+			if (server.isConnected()) {
+				//server.send(msg, (int)strlen(msg)); // send to connection 0 // FIXME send to cur connection
+				//server.send(1, msg, (int)strlen(msg)); // send to connection i
+				server.sendAll(msg, (int)strlen(msg)); // send to all connection
+			}
 		}
 	}
 

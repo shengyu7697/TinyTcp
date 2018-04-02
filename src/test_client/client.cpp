@@ -50,7 +50,9 @@ int main(int argc, char* argv[])
 		if (strcmp(msg, "q") == 0) {
 			client.stop();
 		} else {
-			client.send(msg, (int)strlen(msg));
+			if (client.isConnected()) {
+				client.send(msg, (int)strlen(msg));
+			}
 		}
 	}
 
