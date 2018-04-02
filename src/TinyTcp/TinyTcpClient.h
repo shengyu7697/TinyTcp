@@ -20,8 +20,9 @@ public:
 	void setOnRecv(OnRecv onRecv);
 	int send(const char *data, int size);
 	int start(const std::string &hostname, int port);
-	inline bool isRunning() { return mRunning; }
 	void stop();
+	inline bool isRunning() { return mRunning; }
+	inline bool isConnected() { return mConnected; }
 
 private:
 	void run();
@@ -33,6 +34,7 @@ private:
 	int mPort;
 	std::thread mThread;
 	bool mRunning;
+	bool mConnected;
 	int mSession;
 
 	OnConnect onConnect;

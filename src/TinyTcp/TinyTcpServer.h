@@ -32,8 +32,9 @@ public:
 	int start(int port, int maxConn = 5);
 	void closeConn(int session);
 	void closeAllConn();
-	inline bool isRunning() { return mRunning; }
 	void stop();
+	inline bool isRunning() { return mRunning; }
+	inline bool isConnected() { return mConnections.size(); }
 
 private:
 	int bind(int port);
