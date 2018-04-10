@@ -41,7 +41,7 @@ int main(int argc, char* argv[])
 	client.setOnConnect(onConnect);
 	client.setOnDisconnect(onDisconnect);
 	client.setOnRecv(onRecv);
-	client.start(hostname, 7000);
+	client.start(hostname, port);
 
 	char msg[256];
 	while (client.isRunning())
