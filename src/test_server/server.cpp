@@ -34,23 +34,23 @@ int main(int argc, char* argv[])
 
 	printf("start server, bind on %d\n", port);
 
-	TinyTcpServer server;
-    server.setOnConnect(onConnect);
-    server.setOnDisconnect(onDisconnect);
-    server.setOnRecv(onRecv);
-	server.start(port);
+	TinyTcpServer ts;
+	ts.setOnConnect(onConnect);
+	ts.setOnDisconnect(onDisconnect);
+	ts.setOnRecv(onRecv);
+	ts.start(port);
 
 	char msg[256];
-	while (server.isRunning())
+	while (ts.isRunning())
 	{
 		cin >> msg;
 		if (strcmp(msg, "q") == 0) {
-			server.stop();
+		    ts.stop();
 		} else {
-			if (server.isConnected()) {
-				//server.send(msg, (int)strlen(msg)); // send to connection 0 // FIXME send to cur connection
-				//server.send(1, msg, (int)strlen(msg)); // send to connection i
-				server.sendAll(msg, (int)strlen(msg)); // send to all connection
+			if (ts.isConnected()) {
+				//ts.send(msg, (int)strlen(msg)); // send to connection 0 // FIXME send to cur connection
+				//ts.send(1, msg, (int)strlen(msg)); // send to connection i
+			    ts.sendAll(msg, (int)strlen(msg)); // send to all connection
 			}
 		}
 	}

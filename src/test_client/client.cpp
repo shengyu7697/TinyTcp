@@ -37,21 +37,21 @@ int main(int argc, char* argv[])
 
 	printf("start client, connect to %s:%d\n", hostname.c_str(), port);
 
-	TinyTcpClient client;
-	client.setOnConnect(onConnect);
-	client.setOnDisconnect(onDisconnect);
-	client.setOnRecv(onRecv);
-	client.start(hostname, port);
+	TinyTcpClient tc;
+	tc.setOnConnect(onConnect);
+	tc.setOnDisconnect(onDisconnect);
+	tc.setOnRecv(onRecv);
+	tc.start(hostname, port);
 
 	char msg[256];
-	while (client.isRunning())
+	while (tc.isRunning())
 	{
 		cin >> msg;
 		if (strcmp(msg, "q") == 0) {
-			client.stop();
+		    tc.stop();
 		} else {
-			if (client.isConnected()) {
-				client.send(msg, (int)strlen(msg));
+			if (tc.isConnected()) {
+			    tc.send(msg, (int)strlen(msg));
 			}
 		}
 	}
