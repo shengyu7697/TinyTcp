@@ -10,46 +10,46 @@
 
 int createSocket()
 {
-	int s;
-	// create a socket
-	s = (int)socket(AF_INET, SOCK_STREAM, 0);
-	if (s == -1) {
-		//perror("Socket creation error");
-		return -1;
-	}
-	//printf("[TinyTcp] Socket created\n");
+    int s;
+    // create a socket
+    s = (int)socket(AF_INET, SOCK_STREAM, 0);
+    if (s == -1) {
+        //perror("Socket creation error");
+        return -1;
+    }
+    //printf("[TinyTcp] Socket created\n");
 
-	return s;
+    return s;
 }
 
 void closeSocket(int socket)
 {
 #ifdef _WIN32
-	closesocket(socket);
+    closesocket(socket);
 #else
-	shutdown(socket, SHUT_RDWR);
-	close(socket);
+    shutdown(socket, SHUT_RDWR);
+    close(socket);
 #endif
-	//printf("[TinyTcp] Socket closed\n");
+    //printf("[TinyTcp] Socket closed\n");
 }
 
 int acceptSocket(int socket)
 {
-	struct sockaddr_in addr;
+    struct sockaddr_in addr;
 #ifdef _WIN32
-	int addrlen = sizeof(addr);
+    int addrlen = sizeof(addr);
 #else
-	socklen_t addrlen = sizeof(addr);
+    socklen_t addrlen = sizeof(addr);
 #endif
 
-	return (int)accept(socket, (struct sockaddr *)&addr, &addrlen);
+    return (int)accept(socket, (struct sockaddr *)&addr, &addrlen);
 }
 
 int getLastError()
 {
 #ifdef _WIN32
-	return WSAGetLastError();
+    return WSAGetLastError();
 #else
-	return errno;
+    return errno;
 #endif
 }

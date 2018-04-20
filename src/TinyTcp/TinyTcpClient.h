@@ -11,35 +11,35 @@ typedef std::function<void(int session, const char *buf, int len)> OnRecv;
 class TinyTcpClient
 {
 public:
-	TinyTcpClient();
-	~TinyTcpClient();
+    TinyTcpClient();
+    ~TinyTcpClient();
 
-	void setVerbose(int level);
-	void setOnConnect(OnConnect onConnect);
-	void setOnDisconnect(OnDisconnect onDisconnect);
-	void setOnRecv(OnRecv onRecv);
-	int send(const char *data, int size);
-	int start(const std::string &hostname, int port);
-	void stop();
-	inline bool isRunning() { return mRunning; }
-	inline bool isConnected() { return mConnected; }
+    void setVerbose(int level);
+    void setOnConnect(OnConnect onConnect);
+    void setOnDisconnect(OnDisconnect onDisconnect);
+    void setOnRecv(OnRecv onRecv);
+    int send(const char *data, int size);
+    int start(const std::string &hostname, int port);
+    void stop();
+    inline bool isRunning() { return mRunning; }
+    inline bool isConnected() { return mConnected; }
 
 private:
-	void run();
-	void processConn(int socket, int session);
+    void run();
+    void processConn(int socket, int session);
 
-	int mVerbose;
-	int mSocket;
-	std::string mHostname;
-	int mPort;
-	std::thread mThread;
-	bool mRunning;
-	bool mConnected;
-	int mSession;
+    int mVerbose;
+    int mSocket;
+    std::string mHostname;
+    int mPort;
+    std::thread mThread;
+    bool mRunning;
+    bool mConnected;
+    int mSession;
 
-	OnConnect onConnect;
-	OnDisconnect onDisconnect;
-	OnRecv onRecv;
+    OnConnect onConnect;
+    OnDisconnect onDisconnect;
+    OnRecv onRecv;
 };
 
 #endif // TINYTCPCLIENT_H
