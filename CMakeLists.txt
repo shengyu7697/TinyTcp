@@ -12,3 +12,5 @@ endif()
 
 add_subdirectory(src/test_server)
 add_subdirectory(src/test_client)
+add_subdirectory(src/test_udp_server)
+add_subdirectory(src/test_udp_client)
