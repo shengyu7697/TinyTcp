@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string.h>
 #include "TinyUdpServer.h"
-#include <unistd.h>
+#include "TimeUtil.h"
 
 using namespace std;
 
@@ -42,7 +42,7 @@ int main(int argc, char* argv[])
                 us.sendAll(msg, (int)strlen(msg)); // send to all connection
             }
         }*/
-        usleep(1000*1000);
+        sleep_ms(1000 * 1);
     }
 
     printf("end of process.\n");

@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string.h>
 #include "TinyUdpClient.h"
-#include <unistd.h>
+#include "TimeUtil.h"
 
 using namespace std;
 
@@ -41,7 +41,7 @@ int main(int argc, char* argv[])
         uc.send(msg, (int)strlen(msg));
         printf("send %s ...\n", msg);
 
-        usleep(1000*1000);
+        sleep_ms(1000 * 1);
     }
 
     printf("end of process.\n");

@@ -2,6 +2,7 @@ add_executable(test_udp_server
     server.cpp
     ../TinyTcp/TinyUdpServer.cpp
     ../TinyTcp/SocketUtil.cpp
+    ../TinyTcp/TimeUtil.cpp
 )
 
 target_include_directories(test_udp_server PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../TinyTcp")

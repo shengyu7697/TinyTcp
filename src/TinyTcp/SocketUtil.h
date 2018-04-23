@@ -1,7 +1,8 @@
 #ifndef SOCKETUTIL_H
 #define SOCKETUTIL_H
 
-int createSocket();
+int createTcpSocket();
+int createUdpSocket();
 void closeSocket(int socket);
 int acceptSocket(int socket);
 int getLastError();

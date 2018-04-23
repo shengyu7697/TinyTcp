@@ -1,40 +1,39 @@
 #include "TinyUdpServer.h"
-
-#include <sys/types.h>
+#include "SocketUtil.h"
+#ifdef _WIN32
+#include <Ws2tcpip.h>
+#else
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 
 using namespace std;
 
 TinyUdpServer::TinyUdpServer() 
 {
+#ifdef _WIN32
+    WSADATA wsa;
+    if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0) {
+        printf("[TinyTcp] WSAStartup failed, error: %d\n", WSAGetLastError());
+    }
+#endif
 }
 
 TinyUdpServer::~TinyUdpServer() 
 {
+    stop();
+#ifdef _WIN32
+    WSACleanup();
+#endif
 }
 
 void TinyUdpServer::setOnRecv(OnRecv onRecv)
 {
     this->onRecv = onRecv;
-}
-
-int createUdpSocket()
-{
-    int s;
-    // create a socket
-    s = (int)socket(AF_INET, SOCK_DGRAM, 0);
-    if (s == -1) {
-        //perror("Socket creation error");
-        return -1;
-    }
-
-    return s;
 }
 
 int TinyUdpServer::start(int port)
@@ -62,7 +61,7 @@ void TinyUdpServer::run()
     my_name.sin_addr.s_addr = INADDR_ANY;
     my_name.sin_port = htons(mPort);
 
-    status = bind(mSocket, (struct sockaddr*)&my_name, sizeof(my_name));
+    status = ::bind(mSocket, (struct sockaddr*)&my_name, sizeof(my_name));
 
     addrlen = sizeof(cli_name);
     while (mRunning)
@@ -81,5 +80,5 @@ void TinyUdpServer::run()
 void TinyUdpServer::stop()
 {
     mRunning = false;
-    close(mSocket);
+    closeSocket(mSocket);
 }

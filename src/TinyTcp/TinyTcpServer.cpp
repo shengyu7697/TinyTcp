@@ -92,7 +92,7 @@ int TinyTcpServer::sendAll(const char *data, int size)
 
 int TinyTcpServer::start(int port, int maxConn)
 {
-    int s = createSocket();
+    int s = createTcpSocket();
     if (s < 0)
         return -1;
 

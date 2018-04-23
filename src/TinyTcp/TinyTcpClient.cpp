@@ -69,7 +69,7 @@ int TinyTcpClient::send(const char *data, int size)
 
 int TinyTcpClient::start(const std::string &hostname, int port)
 {
-    int s = createSocket();
+    int s = createTcpSocket();
     if (s < 0)
         return -1;
 
@@ -88,8 +88,7 @@ void TinyTcpClient::run()
     struct sockaddr_in addr;
     addr.sin_family = AF_INET;
     addr.sin_port = htons(mPort);
-    inet_pton(AF_INET, mHostname.c_str(), &(addr.sin_addr)); // FIXME use inet_aton ?
-    //inet_aton(ip_address, &addr.sin_addr);
+    inet_pton(AF_INET, mHostname.c_str(), &(addr.sin_addr));
 
     while (!mConnected && mSocket != -1) // retry forever
     {

@@ -8,7 +8,7 @@
 #include <errno.h>
 #endif
 
-int createSocket()
+int createTcpSocket()
 {
     int s;
     // create a socket
@@ -18,6 +18,19 @@ int createSocket()
         return -1;
     }
     //printf("[TinyTcp] Socket created\n");
+
+    return s;
+}
+
+int createUdpSocket()
+{
+    int s;
+    // create a socket
+    s = (int)socket(AF_INET, SOCK_DGRAM, 0);
+    if (s == -1) {
+        //perror("Socket creation error");
+        return -1;
+    }
 
     return s;
 }
