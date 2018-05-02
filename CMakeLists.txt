@@ -10,6 +10,7 @@ else()
     set(CMAKE_CXX_FLAGS_RELEASE "-W -Wall -O3 -std=c++11")
 endif()
 
+add_subdirectory(src/TinyTcp)
 add_subdirectory(src/test_tcp_server)
 add_subdirectory(src/test_tcp_client)
 add_subdirectory(src/test_udp_server)
