@@ -6,10 +6,6 @@
 #include <vector>
 #include <map>
 
-typedef std::function<void(int session)> OnConnect;
-typedef std::function<void(int session)> OnDisconnect;
-typedef std::function<void(int session, const char *buf, int len)> OnRecv;
-
 class Connection {
 public:
     std::thread thread;
@@ -18,6 +14,9 @@ public:
 
 class TinyTcpServer
 {
+    typedef std::function<void(int session)> OnConnect;
+    typedef std::function<void(int session)> OnDisconnect;
+    typedef std::function<void(int session, const char *buf, int len)> OnRecv;
 public:
     TinyTcpServer();
     ~TinyTcpServer();

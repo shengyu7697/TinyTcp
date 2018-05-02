@@ -4,12 +4,11 @@
 #include <thread>
 #include <functional>
 
-typedef std::function<void(int session)> OnConnect;
-typedef std::function<void(int session)> OnDisconnect;
-typedef std::function<void(int session, const char *buf, int len)> OnRecv;
-
 class TinyTcpClient
 {
+    typedef std::function<void(int session)> OnConnect;
+    typedef std::function<void(int session)> OnDisconnect;
+    typedef std::function<void(int session, const char *buf, int len)> OnRecv;
 public:
     TinyTcpClient();
     ~TinyTcpClient();

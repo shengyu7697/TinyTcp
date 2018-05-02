@@ -4,10 +4,9 @@
 #include <thread>
 #include <functional>
 
-typedef std::function<void(const char *buf, int len)> OnRecv;
-
 class TinyUdpServer
 {
+    typedef std::function<void(const char *buf, int len)> OnRecv;
 public:
     TinyUdpServer();
     ~TinyUdpServer();
