@@ -13,7 +13,8 @@
 
 using namespace std;
 
-TinyUdpServer::TinyUdpServer() 
+TinyUdpServer::TinyUdpServer() :
+    onRecv(nullptr)
 {
 #ifdef _WIN32
     WSADATA wsa;
@@ -53,7 +54,7 @@ void TinyUdpServer::run()
 {
     struct sockaddr_in my_name, cli_name;
     char buf[4096];
-    int status, nbytes;
+    int status;
     int addrlen;
 
     // server address
@@ -67,11 +68,15 @@ void TinyUdpServer::run()
     while (mRunning)
     {
         memset(buf, 0, sizeof(buf));
-        nbytes = recvfrom(mSocket, buf, sizeof(buf), 0,
+        int len = recvfrom(mSocket, buf, sizeof(buf), 0,
                 (struct sockaddr*)&cli_name, (socklen_t *)&addrlen);
 
-        printf("recv from %s:%d\n", inet_ntoa(cli_name.sin_addr), ntohs(cli_name.sin_port));
-        printf("%s\n", buf);
+        //printf("recv from %s:%d\n", inet_ntoa(cli_name.sin_addr), ntohs(cli_name.sin_port));
+        //printf("%s\n", buf);
+
+        // notify onRecv callback
+        if (onRecv)
+            onRecv(buf, len);
     }
 
     mRunning = false;
