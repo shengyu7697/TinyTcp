@@ -1,4 +1,4 @@
-add_library(tinytcp STATIC
+set(FILES
     TinyTcpClient.h
     TinyTcpClient.cpp
     TinyTcpServer.h
@@ -13,8 +13,18 @@ add_library(tinytcp STATIC
     TimeUtil.cpp
 )
 
+if(MSVC)
+else()
+list(APPEND FILES
+    NetworkUtil.h
+    NetworkUtil.cpp
+)
+endif()
+
+add_library(tinytcp STATIC ${FILES})
+
 target_include_directories(tinytcp PUBLIC ./)
-if(WIN32)
+if(MSVC)
 target_link_libraries(tinytcp Ws2_32)
 else()
 target_link_libraries(tinytcp pthread)
