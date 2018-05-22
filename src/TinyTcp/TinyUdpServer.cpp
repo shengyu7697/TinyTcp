@@ -74,6 +74,14 @@ void TinyUdpServer::run()
         //printf("recv from %s:%d\n", inet_ntoa(cli_name.sin_addr), ntohs(cli_name.sin_port));
         //printf("%s\n", buf);
 
+        if (len == 0) { // closed
+            printf("[TinyTcp] close client\n");
+            break;
+        } else if (len == -1) { // error
+            printf("[TinyTcp] recv error %d\n", __LINE__);
+            continue;
+        }
+
         // notify onRecv callback
         if (onRecv)
             onRecv(buf, len);
@@ -86,4 +94,6 @@ void TinyUdpServer::stop()
 {
     mRunning = false;
     closeSocket(mSocket);
+    if (mThread.joinable())
+        mThread.join();
 }
