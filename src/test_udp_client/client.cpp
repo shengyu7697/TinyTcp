@@ -28,20 +28,18 @@ int main(int argc, char* argv[])
     char msg[256];
     while (uc.isRunning())
     {
-        /*cin >> msg;
+        cin >> msg;
         if (strcmp(msg, "q") == 0) {
             uc.stop();
         } else {
-            if (uc.isConnected()) {
-                uc.send(msg, (int)strlen(msg));
-            }
-        }*/
+            uc.send(msg, (int)strlen(msg));
+        }
 
-        strcpy(msg, "Hello Wrold!");
+        /*strcpy(msg, "Hello Wrold!");
         uc.send(msg, (int)strlen(msg));
         printf("send %s ...\n", msg);
 
-        sleep_ms(1000 * 1);
+        sleep_ms(1000 * 1);*/
     }
 
     printf("end of process.\n");

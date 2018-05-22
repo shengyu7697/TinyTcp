@@ -66,6 +66,7 @@ void TinyUdpClient::run()
 
 void TinyUdpClient::stop()
 {
+    mRunning = false;
     closeSocket(mSocket);
 }
 
