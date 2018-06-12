@@ -3,6 +3,7 @@
 
 //#include <thread>
 #include <functional>
+#include <string>
 #ifdef _WIN32
 #include <winsock2.h>
 #else

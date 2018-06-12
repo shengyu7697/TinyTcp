@@ -3,6 +3,7 @@
 
 #include <thread>
 #include <functional>
+#include <string>
 
 class TinyTcpClient
 {
