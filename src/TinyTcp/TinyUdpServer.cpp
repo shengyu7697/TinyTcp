@@ -48,6 +48,7 @@ int TinyUdpServer::start(int port)
     mRunning = true;
 
     mThread = std::thread(&TinyUdpServer::run, this);
+    return 1;
 }
 
 void TinyUdpServer::run()
